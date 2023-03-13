@@ -8,16 +8,22 @@ namespace SojaExiles
     public class MouseLook : MonoBehaviour
     {
 
-        public float mouseXSensitivity = 100f;
+        [SerializeField] float mouseXSensitivity = 100f;
 
-        public Transform playerBody;
+        [SerializeField] Transform playerBody;
+
+        [SerializeField] GameObject gameObjectMenu;
 
         float xRotation = 0f;
+
 
         // Start is called before the first frame update
         void Start()
         {
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+
+            gameObjectMenu.SetActive(false);
         }
 
         // Update is called once per frame
@@ -31,6 +37,13 @@ namespace SojaExiles
 
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             playerBody.Rotate(Vector3.up * mouseX);
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                gameObjectMenu.SetActive(true);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
         }
     }
 }
