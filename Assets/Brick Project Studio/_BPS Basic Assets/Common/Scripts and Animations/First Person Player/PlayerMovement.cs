@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 namespace SojaExiles
 
@@ -8,14 +10,37 @@ namespace SojaExiles
     public class PlayerMovement : MonoBehaviour
     {
 
-        public CharacterController controller;
+        [SerializeField] CharacterController controller;
 
-        public float speed = 5f;
-        public float gravity = -15f;
+        [SerializeField] float speed = 5f;
+        [SerializeField] float gravity = -15f;
+
+        [SerializeField] BackupScriptableObject backupScriptableObject;
+
 
         Vector3 velocity;
 
-        bool isGrounded;
+
+        private void Start()
+        {
+            switch (SceneManager.GetActiveScene().buildIndex)
+            {
+                case 0:
+                    if (backupScriptableObject.positionScene1 != new Vector3(0,0,0))
+                        transform.position = backupScriptableObject.positionScene1;
+                    break;
+                case 1:
+                    if (backupScriptableObject.positionScene2 != new Vector3(0, 0, 0))
+                        transform.position = backupScriptableObject.positionScene2;
+                    break;
+                case 2:
+                    if (backupScriptableObject.positionScene3 != new Vector3(0, 0, 0))
+                        transform.position = backupScriptableObject.positionScene3;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         // Update is called once per frame
         void Update()
@@ -32,6 +57,23 @@ namespace SojaExiles
 
             controller.Move(velocity * Time.deltaTime);
 
+            if (transform != null && transform.position != null) 
+            { 
+                switch (SceneManager.GetActiveScene().buildIndex)
+                {
+                    case 0:
+                            backupScriptableObject.positionScene1 = transform.position;
+                        break;
+                    case 1:
+                        backupScriptableObject.positionScene2 = transform.position;
+                        break;
+                    case 2:
+                        backupScriptableObject.positionScene3 = transform.position;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }
